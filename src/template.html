@@ -22,7 +22,7 @@
         <div class="common-options">
           <p class="option-text">
             <span class="material-symbols-outlined"> sunny </span
-            ><span>My Day</span><span class="number">1</span>
+            ><span>My Day</span><span class="number number-myDay"></span>
           </p>
           <p class="option-text">
             <span class="material-symbols-outlined"> star </span>Important
@@ -62,37 +62,74 @@
         <div class="todo">
           <h1>My Day</h1>
           <p class="date">December 22, 2023</p>
-          <ul class="list">
+          <div class="list-empty">
+            <p>List is Empty!</p>
+            <p>Be Productive, add tasks and just do it!</p>
+          </div>
+          <div class="list-container">
+            <ul class="list">
+              <!-- 
             <li class="item-container">
-              <span class="material-symbols-outlined check-icon"> circle </span>
+              <span
+                class="material-symbols-outlined check-icon"
+                data-target="icon"
+              >
+                circle
+              </span>
               <p class="item">
                 <span class="">Pay BIlls</span>
                 <span class="task-location">Habits</span>
               </p>
-              <span class="material-symbols-outlined important"> star </span>
+              <span
+                class="material-symbols-outlined important"
+                data-target="icon"
+              >
+                star
+              </span>
             </li>
+           
             <li class="item-container">
-              <span class="material-symbols-outlined check-icon"> circle </span>
-              <p class="item">
-                <span class="">Eat Rice</span>
-                <span class="task-location">Habits</span>
-              </p>
-              <span class="material-symbols-outlined important"> star </span>
-            </li>
-          </ul>
-          <div class="complete-text"><span class="arrow">▼</span>Completed</div>
-          <ul class="completed-list list inactive">
-            <li class="item-container">
-              <span class="material-symbols-outlined completed-icon">
-                task_alt
+              <span
+                class="material-symbols-outlined check-icon"
+                data-target="icon"
+              >
+                circle
               </span>
               <p class="item">
-                <span class="completed-text">Pay BIlls</span>
+                <span class="">Eat RIce</span>
                 <span class="task-location">Habits</span>
               </p>
-              <span class="material-symbols-outlined important"> star </span>
+              <span
+                class="material-symbols-outlined important"
+                data-target="icon"
+              >
+                star
+              </span>
             </li>
-          </ul>
+          
+          -->
+            </ul>
+
+            <div class="complete-text inactive">
+              <span class="arrow">▼</span>Completed<span
+                class="number-completed"
+                >0</span
+              >
+            </div>
+            <ul class="completed-list list complete inactive">
+              <li class="item-container complete">
+                <span class="material-symbols-outlined completed-icon">
+                  task_alt
+                </span>
+
+                <p class="item complete">
+                  <span class="completed-text">Pay BIlls</span>
+                  <span class="task-location">Habits</span>
+                </p>
+                <span class="material-symbols-outlined important"> star </span>
+              </li>
+            </ul>
+          </div>
 
           <form action="" class="form">
             <span class="material-symbols-outlined add-icon"> add </span>
@@ -102,20 +139,24 @@
               placeholder="Add a Task"
               onfocus="this.placeholder=''"
               onblur="this.placeholder='Add a Task'"
+              min="1"
+              required
             />
           </form>
         </div>
 
-        <div class="sidebar-right">
+        <div class="sidebar-right inactive">
           <div class="close-sidebar">
             <span class="material-symbols-outlined close"> close </span>
           </div>
           <div class="task-detail-container">
-            <p class="task-detail task-name">
+            <div class="task-detail">
               <span class="material-symbols-outlined check-icon"> circle </span>
-              <span class="item">Pay BIlls</span>
+              <form action="">
+                <input type="text" class="item task-name-sidebar" />
+              </form>
               <span class="material-symbols-outlined important"> star </span>
-            </p>
+            </div>
             <div class="add-step">
               <p class="task-detail lower-font">
                 <span class="material-symbols-outlined add-icon"> add </span>
@@ -134,18 +175,52 @@
             <p class="option-text medium-padding medium-fontsize">
               <span class="material-symbols-outlined add-icon"> alarm </span>
               <span>Remind Me</span>
+              <span>(Coming Soon)</span>
             </p>
             <div class="div-sidebar-right"></div>
-            <p class="option-text medium-padding medium-fontsize">
+            <div
+              class="option-text medium-padding medium-fontsize due-date-container"
+            >
               <span class="material-symbols-outlined add-icon">
                 <span class="material-symbols-outlined"> calendar_month </span>
               </span>
-              <span>Add Due Date</span>
-            </p>
+              <div class="due-date-text">
+                <span class="">Add Due Date</span>
+                <div class="drop-down drop-down-date inactive">
+                  <div class="drop-down-element drop-date-element picked-date">
+                    <span class="material-symbols-outlined"> today </span>
+                    <span>Today</span>
+                    <span class="day today">Tue</span>
+                  </div>
+                  <div class="drop-down-element drop-date-element picked-date">
+                    <span class="material-symbols-outlined">
+                      event_upcoming
+                    </span>
+                    <span>Tomorrow</span>
+                    <span class="day tomorrow">Wed</span>
+                  </div>
+                  <div class="drop-down-element drop-date-element picked-date">
+                    <span class="material-symbols-outlined"> date_range </span>
+                    <span>Next Week</span>
+                    <span class="day next-week">Thur</span>
+                  </div>
+                  <div
+                    class="drop-down-element drop-date-element picked-date si"
+                  >
+                    <span class="material-symbols-outlined">
+                      calendar_month
+                    </span>
+                    <span>Pick a Date</span>
+                    <input type="date" class="date-picker" />
+                  </div>
+                </div>
+              </div>
+            </div>
             <div class="div-sidebar-right"></div>
             <p class="option-text medium-padding medium-fontsize">
               <span class="material-symbols-outlined add-icon"> repeat </span>
               <span>Repeat</span>
+              <span>(Coming Soon)</span>
             </p>
           </div>
           <div class="task-detail-container">
