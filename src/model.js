@@ -5,6 +5,9 @@ const dateNow = new Date(Date.now());
 const daysToAddTillNextWeek = 7 - dateNow.getDay();
 const dateTomorrow = add(dateNow, { hours: 24 });
 const dateNextWeek = add(dateNow, { days: daysToAddTillNextWeek });
+const pickedDate = function (date) {
+  return new Date(date);
+};
 
 export const myDayTaskContainer = [];
 export const importantTaskContainer = [];
@@ -33,5 +36,6 @@ export const datesFormatted = function () {
 export const getPickedDate = function (day) {
   if (day === "Today") return dateNow;
   if (day === "Tomorrow") return dateTomorrow;
-  if (day === "nextWeek") return dateNextWeek;
+  if (day === "Next Week") return dateNextWeek;
+  return pickedDate(day);
 };

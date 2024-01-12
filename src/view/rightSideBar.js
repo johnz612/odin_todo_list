@@ -47,16 +47,8 @@ class RightSideBar {
     // Focusout event listener for the sidebar input filed
     this.taskNameContainer.addEventListener("focusout", function (e) {
       e.preventDefault();
-      let taskItemClicked = e.target.closest("[data-id").dataset.id;
+      let taskItemClicked = e.target.closest("[data-id]").dataset.id;
       handler(taskItemClicked);
-    });
-  };
-
-  addTaskEditDueDateHandler = function (handler) {
-    const dropDownElement = document.querySelector(".drop-down-date");
-    this.dueDateElement.addEventListener("click", function (e) {
-      dropDownElement.classList.remove("inactive");
-      handler();
     });
   };
 
@@ -65,20 +57,39 @@ class RightSideBar {
     return editedName;
   };
 
+  getDateValue = function () {
+    return this.datePicker.value;
+  };
+
   addDropDownDatesHandler = function (handler) {
     const dropDownElement = document.querySelector(".drop-down-date");
     const datePicker = document.querySelector(".date-picker");
 
-    dropDownElement.addEventListener("click", function (e) {
+    this.dueDateElement.addEventListener("click", function (e) {
       // Get the tasked ID to determine the object
-      const pickedTasked = e.target.closest("[data-id").dataset.id;
+      const pickedTasked = e.target.closest("[data-id]").dataset.id;
+      // console.log(e.target);
+
       // Get the tasked date text, located at the 2nd child of its parent
-      const pickedDate =
-        e.target.closest(".picked-date").children[1].textContent;
-      if (pickedDate === "Pick a Date") {
-        datePicker.showPicker();
+      if (!e.target.closest(".picked-date")) {
+        dropDownElement.classList.toggle("inactive");
         return;
       }
+
+      let pickedDate = e.target.closest(".picked-date").children[1].textContent;
+
+      if (pickedDate === "Pick a Date") {
+        datePicker.showPicker();
+        datePicker.addEventListener("change", function () {
+          pickedDate = datePicker.value;
+          // console.log(pickedDate);
+          handler(pickedTasked, pickedDate);
+        });
+        return;
+      } else {
+        dropDownElement.classList.add("inactive");
+      }
+
       handler(pickedTasked, pickedDate);
     });
   };

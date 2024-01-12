@@ -45,7 +45,7 @@ class TodoScreen {
     this.listEmpty.classList.remove("inactive");
   };
 
-  renderNewTask = function (element, length) {
+  renderNewTask = function (element) {
     this.listEmpty.classList.add("inactive");
     this.listContainer.appendChild(element);
   };

@@ -1,4 +1,22 @@
-import { format } from "date-fns";
+import { format, add } from "date-fns";
+
+const dueDatesFormat = function (dueDate) {
+  if (!dueDate) return "";
+  const dateNow = new Date(Date.now());
+  const dateTomorrow = add(dateNow, { hours: 24 });
+  const dueDateFormated = format(dueDate, "EEEE, d LLLL");
+  const dateNowFormatted = format(dateNow, "EEEE, d LLLL");
+  const dateTomorrowFormatted = format(dateTomorrow, "EEEE, d LLLL");
+
+  // If due date is today
+  if (dueDateFormated === dateNowFormatted) return " - Today";
+
+  // If due date is tomorrow
+  if (dueDateFormated === dateTomorrowFormatted) return " - Tomorrow";
+
+  return ` - ${format(dueDate, "EEEE, d LLLL")}`;
+};
+
 const CompletedItemTemplate = function (task) {
   ////// Template
   {
@@ -31,7 +49,7 @@ const CompletedItemTemplate = function (task) {
   taskName.textContent = task.name;
   const dueDate = document.createElement("span");
   dueDate.classList.add("due-date");
-  dueDate.textContent = task.dueDate ? ` - ${format(task.dueDate, "EEE")}` : "";
+  dueDate.textContent = dueDatesFormat(task.dueDate);
   const taskLocation = document.createElement("span");
   taskLocation.classList.add("task-location");
   taskLocation.textContent = task.group;
