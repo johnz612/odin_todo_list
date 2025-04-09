@@ -12,7 +12,24 @@ const pickedDate = function (date) {
 export const myDayTaskContainer = [];
 export const importantTaskContainer = [];
 export const completedTaskContainer = [];
+export let currentTaskIdSidebar = "";
+export let currentPage = "myDay";
 
+export function setCurrentTaskIdSidebar(id) {
+  currentTaskIdSidebar = id;
+}
+
+export function getCurrentTaskIdSidebar() {
+  return currentTaskIdSidebar;
+}
+
+export function setCurrentPage(page) {
+  currentPage = page;
+}
+
+export function getCurrentPage() {
+  return currentPage;
+}
 export const getTaskClicked = function (item, array) {
   const taskItem = array.find((object) => object.id === item);
   return taskItem;

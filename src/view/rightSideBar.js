@@ -8,13 +8,17 @@ class RightSideBar {
   dueDateElement = document.querySelector(".due-date-container");
   deleteButton = document.querySelector(".delete-container");
   datePicker = document.querySelector(".date-picker");
+  checkIcon = document.querySelector(".check-icon");
+  importantIcon = document.querySelector(".important");
+  addNotesContainer = document.querySelector(".add-note");
 
   // Event Listener For when the sidebar should be open
   addListClickOpenHandler = function (handler) {
     this.listContainer.addEventListener("click", function (e) {
       if (
-        e.target.dataset.target === "icon" ||
-        e.target.parentElement.classList.contains("complete")
+        e.target.dataset.target === "star" ||
+        e.target.parentElement.classList.contains("complete") ||
+        e.target.dataset.icontype === "check"
       )
         return;
 
@@ -47,6 +51,22 @@ class RightSideBar {
     // Focusout event listener for the sidebar input filed
     this.taskNameContainer.addEventListener("focusout", function (e) {
       e.preventDefault();
+      let taskItemClicked = e.target.closest("[data-id]").dataset.id;
+      handler(taskItemClicked);
+    });
+  };
+
+  addCheckClickHandler = function (handler) {
+    this.checkIcon.addEventListener("click", function (e) {
+      e.preventDefault();
+
+      let taskItemClicked = e.target.closest("[data-id]").dataset.id;
+      handler(taskItemClicked);
+    });
+  };
+
+  addClickImportantHandler = function (handler) {
+    this.importantIcon.addEventListener("click", function (e) {
       let taskItemClicked = e.target.closest("[data-id]").dataset.id;
       handler(taskItemClicked);
     });
@@ -111,6 +131,33 @@ class RightSideBar {
     nextWeek.textContent = date.nextWeek;
   };
 
+  addNotesHandler = function (handler) {
+    // Submit evenl listener
+    // Parent element is a form so we listen for submit
+    this.addNotesContainer.parentElement.addEventListener(
+      "submit",
+      function (e) {
+        e.preventDefault();
+        const inputElement = document.querySelector("input[data-id]");
+        let taskItemClicked = inputElement.dataset.id;
+        handler(taskItemClicked);
+      }
+    );
+
+    // Focusout event listener for the sidebar input filed
+    this.addNotesContainer.addEventListener("focusout", function (e) {
+      e.preventDefault();
+      let taskItemClicked = e.target.closest("[data-id]").dataset.id;
+      handler(taskItemClicked);
+    });
+  };
+
+  getNotes = function () {
+    let notes = this.addNotesContainer.value;
+    console.log(notes);
+    return notes;
+  };
+
   closeOpenSidebar = function () {
     this.rightSideBarContainer.classList.toggle("inactive");
   };
@@ -133,6 +180,12 @@ class RightSideBar {
     this.taskNameContainer.value = task.name;
     this.taskNameContainer.setAttribute("data-id", task.id);
     this.rightSideBarContainer.setAttribute("data-id", task.id);
+    if (task.isImportant) {
+      this.importantIcon.style.color = "rgb(138, 177, 164)";
+    } else {
+      this.importantIcon.style.color = "";
+    }
+    this.addNotesContainer.value = task.notes;
   };
 }
 

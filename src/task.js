@@ -6,7 +6,8 @@ class Tasks {
     group = "Tasks",
     steps = [],
     dueDate = "",
-    isImportant = false
+    isImportant = false,
+    notes = ""
   ) {
     this.name = name;
     this.group = group;
@@ -14,6 +15,7 @@ class Tasks {
     this.dueDate = dueDate;
     this.id = uuidv4();
     this.isImportant = isImportant;
+    this.notes = notes;
   }
 }
 

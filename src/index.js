@@ -2,7 +2,7 @@
 import "./style.css";
 import toDoView from "./view/todoView.js";
 import rightSideBar from "./view/rightSideBar.js";
-import task from "./task.js";
+import Task from "./task.js";
 import taskItemTemplate from "./templates/todoListTemplate.js";
 import * as model from "./model.js";
 import view from "./view/View.js";
@@ -22,21 +22,25 @@ const updateToDoList = function (
   item = ""
 ) {
   let myDayLength = model.myDayTaskContainer.length;
+
+  // This will render the list based on the mydayTaskContainer
   if (isWithImportant === false) {
     model.myDayTaskContainer
       .toReversed()
       .forEach((item) => toDoView.renderNewTask(taskItemTemplate(item)));
+    // THe last line will make the important icon turn into the default color
   } else {
-    model.myDayTaskContainer.splice(index, 1);
-    model.myDayTaskContainer.push(item);
+    model.myDayTaskContainer.splice(index, 1); //remove the important task
+    model.myDayTaskContainer.push(item); // Push to the last element of array
+    // Reversed the array and render in dom, so that new or important ones are rendered first
     model.myDayTaskContainer
       .toReversed()
       .forEach((item) => toDoView.renderNewTask(taskItemTemplate(item)));
   }
 
-  // Update Left Side Bar's number of Tasks in a list
+  // Update Left Side Bar's # of Tasks in a list
   leftSideBar.renderMyDayTaskLength(model.myDayTaskContainer.length);
-  leftSideBar.renderImportantTaskLength(model.importantTaskContainer.length);
+  // leftSideBar.renderImportantTaskLength(model.importantTaskContainer.length);
 };
 
 const updateImportantViewList = function () {
@@ -57,14 +61,15 @@ const updateCompletedList = function () {
 };
 
 ////////////////////////////////// To Do List Screen Control
+// Add newly created task
 const controlAddTaskToList = function () {
-  // 1. Get New Task
-  const newTask = new task(toDoView.getNewTasks());
+  // 1. Create a new task object with the Task Class
+  const newTask = new Task(toDoView.getNewTasks());
 
   //   2. Push task to List Container Array
   model.myDayTaskContainer.push(newTask);
 
-  //   3. Clear previous List
+  //   3. Clear previous List in html
   toDoView.clear();
 
   // 4. Render new Task List
@@ -85,13 +90,15 @@ const controlEditTaskName = function (item) {
   updateToDoList();
 };
 
+// Control list if important button is clicked
 const controlImportant = function (item) {
   // 1, Determine the object and update the imporant property of that object
   const taskClicked = model.getTaskClicked(item, model.myDayTaskContainer);
   taskClicked.isImportant = taskClicked.isImportant === true ? false : true;
+  // Get the index of that task inside mydayTaskContainer
   const index = model.myDayTaskContainer.indexOf(taskClicked);
 
-  // 2. Add to important container
+  // 2. Add to important container or remove it if its now false
   if (taskClicked.isImportant === true) {
     model.importantTaskContainer.push(taskClicked);
   } else {
@@ -105,9 +112,11 @@ const controlImportant = function (item) {
   // 4. Update new Task List
   updateToDoList(taskClicked.isImportant, index, taskClicked);
 
+  // Update RightSideBar if open
+
+  rightSideBar.renderSideBarDetails(taskClicked);
+
   // 5. If taskClicekd  important property is false, then remove it in the important container
-  // if (taskClicked.isImportant === false) {
-  // }
 };
 
 const controlCompletedTask = function (item) {
@@ -201,20 +210,34 @@ const controlDeleteCompTask = function (item) {
 };
 
 ///////////////////////////////Right Side Bar Control
-const controlRightSideBarOpen = function (item) {
-  // 1. Open SideBar whn Item Clicked
+const controlRightSideBarOpen = function (itemId) {
+  //1 Add state as the current task in sidebar
+  if (model.getCurrentTaskIdSidebar() === itemId) {
+    rightSideBar.closeOpenSidebar();
+    model.setCurrentTaskIdSidebar("");
+    return;
+  }
+
+  if (model.getCurrentTaskIdSidebar !== itemId) {
+    model.setCurrentTaskIdSidebar(itemId);
+  }
+
+  // 2. Open SideBar whn Item Clicked
   rightSideBar.openSideBar();
 
-  //   2. Identfiy the Object clicked
-  const taskClicked = model.getTaskClicked(item, model.myDayTaskContainer);
+  //   3. Identfiy the Object clicked
+  const taskClicked = model.getTaskClicked(itemId, model.myDayTaskContainer);
 
-  // 3. Render the rightsidebar based on the Object clicked
+  // 4. Render the rightsidebar based on the Object clicked
   rightSideBar.renderSideBarDetails(taskClicked);
 };
 
 const controlRightSideBarClose = function () {
   // 1. Close sidebar when close button clicked
   rightSideBar.closeSideBar();
+
+  // Update RightSideBar if open
+  rightSideBar.renderSideBarDetails(taskClicked);
 };
 
 const controlDropDown = function (item, element) {
@@ -228,6 +251,18 @@ const controlDropDown = function (item, element) {
 
   // 3. Render new Task List
   updateToDoList();
+};
+
+const controlAddNotes = function (itemId) {
+  console.log(itemId);
+  // 1. Determine the object
+  const taskSelected = model.getTaskClicked(itemId, model.myDayTaskContainer);
+
+  const notes = rightSideBar.getNotes();
+
+  console.log(notes);
+
+  taskSelected.notes = notes;
 };
 
 const controlDeleteTask = function (item) {
@@ -263,7 +298,6 @@ const controlDeleteTask = function (item) {
 
 const controlLeftSideBar = function () {
   // 1. Clear List
-
   importantView.clear();
 
   // 2. Show BoilerPlate
@@ -273,22 +307,31 @@ const controlLeftSideBar = function () {
   updateImportantViewList();
 };
 
+// What these majority handlers do is to get the specific task in the dom and pass it to
+// the controller function
 const init = function () {
   updateDate();
 
+  todoView.renderBackgroundBasedOnTime();
+
+  // Add newly created task
   toDoView.addHandlerGetTaskInput(controlAddTaskToList);
+  // Update important task,
+  // Access ClickImportant function to get the ID and pass it to control important
+  // Contorl Important will then update the important Array
+  toDoView.addHandlerClickedImportant(controlImportant);
+  toDoView.addHandlerCompletedTask(controlCompletedTask);
   rightSideBar.addListClickOpenHandler(controlRightSideBarOpen);
+  rightSideBar.addNotesHandler(controlAddNotes);
+  rightSideBar.addClickImportantHandler(controlImportant);
   rightSideBar.addListClickCLoseHandler(controlRightSideBarClose);
   rightSideBar.addTaskEditNameHandler(controlEditTaskName);
   rightSideBar.addDropDownDatesHandler(controlDropDown);
   rightSideBar.addDeleteClickHandler(controlDeleteTask);
-  toDoView.addHandlerClickedImportant(controlImportant);
-  toDoView.addHandlerCompletedTask(controlCompletedTask);
+  rightSideBar.addCheckClickHandler(controlCompletedTask);
   completed.addHandlerHideCompleted(controlHideCompletedTask);
   completed.addHandlerRevertCompletedTask(controlRevertCompletedTask);
   completed.addHandlerDeleteCompletedTask(controlDeleteCompTask);
-
-  leftSideBar.addHandlerClickedImportant(controlLeftSideBar);
 };
 
 init();

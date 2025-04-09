@@ -64,7 +64,7 @@ const TasksItemTemplate = function (task) {
 
   const importantIcon = document.createElement("span");
   importantIcon.classList.add("material-symbols-outlined", "important");
-  importantIcon.setAttribute("data-target", "icon");
+  importantIcon.setAttribute("data-target", "star");
   importantIcon.textContent = "star";
   task.isImportant === true
     ? importantIcon.classList.add("important-true")

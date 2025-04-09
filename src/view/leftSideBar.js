@@ -27,6 +27,12 @@ class LeftSideBar {
     this.container.innerHTML = "";
   };
 
+  addHandlerClickMyDay = function (handler) {
+    this.myDay.addEventListener("click", function (e) {
+      handler();
+    });
+  };
+
   addHandlerClickedImportant = function (handler) {
     this.important.addEventListener("click", function (e) {
       handler();
